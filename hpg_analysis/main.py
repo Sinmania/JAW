@@ -93,6 +93,7 @@ def runShortQueries(tx):
 
 
 def getTopLvlNode(id, tx):
+    print("getTopLevelNode: " + id)
     query = """
     match (m{Type:'ExpressionStatement'})-[:AST_parentOf*1..30]->(n{Id:'%s'})
     return m.Id;
