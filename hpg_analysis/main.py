@@ -108,11 +108,12 @@ def find_conn(tx):
     for sink in sinks:
         res = df.get_varname_value_from_context(sink[0],sink[1])
         for tl in res:
+            found = False
             nodes = tl[2]
             for key, value in nodes.items():
                 toplevelnode = getTopLvlNode(value, tx)
                 #print("toplevelnode: " + str(toplevelnode))
-                if toplevelnode in sources:
+                if not found and toplevelnode in sources:
                     print("found vulnerable source " + str(tl))
 
 
