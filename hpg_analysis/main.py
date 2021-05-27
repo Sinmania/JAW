@@ -109,14 +109,16 @@ def find_conn(tx):
             nodes = tl[2]
             for key, value in nodes.items():
                 toplevelnode = getTopLvlNode(value, tx)
-                if toplevelnode in sources
+                print("toplevelnode: " + str(toplevelnode))
+                if toplevelnode in sources:
                     print(tl)
 
 
 
 getAllSinks()
 getAllSources()
-
+print("Sinks: " + str(sinks))
+print("Sources: " + str(sources))
 
 neo_driver = GraphDatabase.driver(constantsModule.NEO4J_CONN_STRING, auth=(constantsModule.NEO4J_USER, constantsModule.NEO4J_PASS))
 with neo_driver.session() as session:
