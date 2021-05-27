@@ -12,9 +12,9 @@ __author__ = "Dominik Sautter"
 
 import constants as constantsModule
 from neo4j import GraphDatabase
-import sources as so
-import sinks as si
-import data_flow as df
+import hpg_analysis.domxss.sources as so
+import hpg_analysis.domxss.sinks as si
+import hpg_analysis.domxss.data_flow as df
 
 sources = []
 sinks =[]
@@ -105,9 +105,12 @@ def getTopLvlNode(id, tx):
 def find_conn(tx):
     for sink in sinks:
         res = df.get_varname_value_from_context(sink[0],sink[1])
-        nodes = res[2]
-        for key, value in nodes.items():
-            print(res)
+        for tl in res:
+            nodes = tl[2]
+            for key, value in nodes.items():
+                toplevelnode = getTopLvlNode(value, tx)
+                if toplevelnode in sources
+                    print(tl)
 
 
 
