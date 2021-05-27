@@ -92,10 +92,22 @@ def runShortQueries(tx):
         print("Vulnerable cookie access with direct assignment:\n" + str(record['conn.Location']))
 
 
-def find_conn():
+def getTopLvlNode(id, tx):
+    query = """
+    match (m{Type:'ExpressionStatement'})-[:AST_parentOf*1..30]->(n{Id:'%s'})
+    return m.Id;
+    """
+    results = tx.run(query)
+    for record in results:
+        return record['m.Id']
+
+
+def find_conn(tx):
     for sink in sinks:
         res = df.get_varname_value_from_context(sink[0],sink[1])
-        print(res)
+        nodes = res[2]
+        for key, value in nodes.items():
+            print(res)
 
 
 
@@ -108,4 +120,4 @@ with neo_driver.session() as session:
     with session.begin_transaction() as tx:
         print("starting short queries (direct assignment)")
         runShortQueries(tx)
-        find_conn()
+        find_conn(tx)
