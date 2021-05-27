@@ -119,6 +119,7 @@ def find_conn(tx):
                     print("in following path:")
                     for path in res:
                         print(path)
+                    print("Sink ends in var: " + str(sink[0]) + "\nIn Location: " + str(sink[1]['ms.Location']))
 
 
 
