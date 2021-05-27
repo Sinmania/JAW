@@ -93,11 +93,12 @@ def runShortQueries(tx):
 
 
 def getTopLvlNode(id, tx):
-    print("getTopLevelNode: " + id)
+    #print("getTopLevelNode: " + id)
     query = """
-    match (m{Type:'ExpressionStatement'})-[:AST_parentOf*1..30]->(n{Id:'%s'})
+    match (m)-[:AST_parentOf*1..30]->(n{Id:'%s'})
+    where m.Type = ExpressionStatement OR m.Type = "VariableDeclaration"
     return m.Id;
-    """
+    """%id
     results = tx.run(query)
     for record in results:
         return record['m.Id']
@@ -110,20 +111,21 @@ def find_conn(tx):
             nodes = tl[2]
             for key, value in nodes.items():
                 toplevelnode = getTopLvlNode(value, tx)
-                print("toplevelnode: " + str(toplevelnode))
+                #print("toplevelnode: " + str(toplevelnode))
                 if toplevelnode in sources:
-                    print(tl)
+                    print("found vulnerable source " + str(tl))
 
 
 
 getAllSinks()
 getAllSources()
-print("Sinks: " + str(sinks))
-print("Sources: " + str(sources))
+#print("Sinks: " + str(sinks))
+#print("Sources: " + str(sources))
 
 neo_driver = GraphDatabase.driver(constantsModule.NEO4J_CONN_STRING, auth=(constantsModule.NEO4J_USER, constantsModule.NEO4J_PASS))
 with neo_driver.session() as session:
     with session.begin_transaction() as tx:
         print("starting short queries (direct assignment)")
         runShortQueries(tx)
+        print("finished short queries, continuing ...")
         find_conn(tx)
