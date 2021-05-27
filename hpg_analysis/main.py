@@ -14,7 +14,7 @@ import constants as constantsModule
 from neo4j import GraphDatabase
 import hpg_analysis.domxss.sources as so
 import hpg_analysis.domxss.sinks as si
-import hpg_analysis.domxss.data_flow as df
+import hpg_analysis.general.data_flow as df
 
 sources = []
 sinks =[]
@@ -96,7 +96,7 @@ def getTopLvlNode(id, tx):
     #print("getTopLevelNode: " + id)
     query = """
     match (m)-[:AST_parentOf*1..30]->(n{Id:'%s'})
-    where m.Type = ExpressionStatement OR m.Type = "VariableDeclaration"
+    where m.Type = "ExpressionStatement" OR m.Type = "VariableDeclaration"
     return m.Id;
     """%id
     results = tx.run(query)
@@ -114,7 +114,11 @@ def find_conn(tx):
                 toplevelnode = getTopLvlNode(value, tx)
                 #print("toplevelnode: " + str(toplevelnode))
                 if not found and toplevelnode in sources:
+                    found = True
                     print("found vulnerable source " + str(tl))
+                    print("in following path:")
+                    for path in res:
+                        print(path)
 
 
 
